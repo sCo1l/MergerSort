@@ -80,7 +80,7 @@ public class MergerSort {
         return result;
     }
 
-    private static <T> List<T> mergeFiles(List<T> list, Class<T> dataType) {
+    private static <T> List<T> mergeFiles(List<T> list, Class<T> dataType) { //слияние файлов
         List<T> mainList;
         List<T> iterList;
         mainList = readFile((String)list.get(0), dataType);
@@ -103,7 +103,7 @@ public class MergerSort {
 
     }
 
-    public Comparator switchSort(Parser parser) {
+    public Comparator switchSort(Parser parser) { //выбор типа сортировки
         Comparator sortTypeObject;
         if (parser.getOptions().containsKey(Parser.ASCENDING_SORT_KEY) ||
                 parser.getOptions().containsKey(Parser.DESCENDING_SORT_KEY) == false) {
@@ -113,7 +113,7 @@ public class MergerSort {
         }
         return sortTypeObject;
     }
-    public Class switchType(Parser parser) {
+    public Class switchType(Parser parser) { //выбор типа данных
         Class dataTypeClass;
         if (parser.getOptions().containsKey(Parser.INTEGER_DATA_KEY)) {
             dataTypeClass = Integer.class;
@@ -126,8 +126,12 @@ public class MergerSort {
         Parser parser = new Parser();
         MergerSort mergerSort = new MergerSort();
         parser.parse(args);
-        mergerSort.switchType(parser);
-        mergerSort.switchSort(parser);
+        if (parser.confirmOptions() == false) {
+            System.out.println("Arguments entered incorrectly");
+            return;
+        }
+/*        mergerSort.switchType(parser);
+        mergerSort.switchSort(parser); */
 
 /*        Comparator sortTypeObject;
         switch (sortType) {
