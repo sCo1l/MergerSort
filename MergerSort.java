@@ -1,7 +1,9 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+
 
 class Ascending implements Comparator<Comparable> { //Компараторы для определения режима сортировки
     @Override
@@ -18,10 +20,11 @@ class Descending implements Comparator<Comparable> {
 }
 
 public class MergerSort {
-    private static final String INTEGER_DATA_KEY = "-i";
+/*    private static final String INTEGER_DATA_KEY = "-i";
     private static final String STRING_DATA_KEY = "-s";
     private static final String DESCENDING_SORT_KEY = "-d";
-    private static final String ASCENDING_SORT_KEY = "-a";
+    private static final String ASCENDING_SORT_KEY = "-a";*/
+
 
 
     private static <T> List<T> readFile(String filePath, Class<T> dataType) { //Чтение из файла в список
@@ -45,7 +48,7 @@ public class MergerSort {
         return myList;
     }
 
-    private static <T> List<T> writeFile(List<T> list, String filePath) throws RuntimeException { //запись отсортированного
+    private static <T> List<T> writeFile(List<T> list, String filePath)  { //запись отсортированного
         try (BufferedWriter writer = new BufferedWriter(                                         //массива в выходной файл
                 new OutputStreamWriter(
                         new FileOutputStream(filePath), "UTF-8"))) {
@@ -79,16 +82,16 @@ public class MergerSort {
         return result;
     }
 
-    private static <T> List<T> mergeFiles(String[] filesPath, Class<T> dataType) {
-        int numberOfFiles = filesPath.length - 3;
+    private static <T> List<T> mergeFiles(List<T> list, Class<T> dataType) {
         List<T> mainList;
         List<T> iterList;
-        mainList = readFile(filesPath[3], dataType);
-        if (filesPath.length == 4) return mainList;
-        for (int i = 0; i < numberOfFiles - 1; i++) {
-            iterList = readFile(filesPath[i + 4], dataType);
+        mainList = readFile((String)list.get(0), dataType);
+        if (list.size() == 2) return mainList;
+        for (int i = 1  ; i < list.size() - 1; i++) {
+            iterList = readFile((String) list.get(i), dataType);
             mainList.addAll(iterList);
         }
+
             return mainList;
 
     }
@@ -102,10 +105,33 @@ public class MergerSort {
 
     }
 
-
-    public static void main(String[] args) {
-        String sortType = args[0];
+    public Comparator switchSort(Parser parser) {
         Comparator sortTypeObject;
+        if (parser.getOptions().containsKey(Parser.ASCENDING_SORT_KEY) ||
+                parser.getOptions().containsKey(Parser.DESCENDING_SORT_KEY) == false) {
+            sortTypeObject = new Ascending();
+        } else {
+            sortTypeObject = new Descending();
+        }
+        return sortTypeObject;
+    }
+    public Class switchType(Parser parser) {
+        Class dataTypeClass;
+        if (parser.getOptions().containsKey(Parser.INTEGER_DATA_KEY)) {
+            dataTypeClass = Integer.class;
+        } else {
+            dataTypeClass = String.class;
+        }
+        return dataTypeClass;
+    }
+    public static void main(String[] args) {
+        Parser parser = new Parser();
+        MergerSort mergerSort = new MergerSort();
+        parser.parse(args);
+        mergerSort.switchType(parser);
+        mergerSort.switchSort(parser);
+
+/*        Comparator sortTypeObject;
         switch (sortType) {
             case DESCENDING_SORT_KEY:
                 sortTypeObject = new Ascending();
@@ -117,9 +143,9 @@ public class MergerSort {
                 sortTypeObject = new Ascending();
                 break;
 
-        }
+        }*/
 
-        String dataType = args[1];
+/*        String dataType = args[1];
         Class dataTypeClass;
         switch (dataType) {
             case INTEGER_DATA_KEY:
@@ -129,13 +155,13 @@ public class MergerSort {
                 dataTypeClass = String.class;
                 break;
             default:
+                parser.getOptions();
                 System.out.println("Enter dataType");
                 return;
-        }
-        System.out.println((mergeSort(mergeFiles(args, dataTypeClass), sortTypeObject, dataTypeClass)));
-        writeFile((mergeSort(mergeFiles(args, dataTypeClass), sortTypeObject, dataTypeClass)), args[2]);
+        }*/
 
-
-
+        writeFile((mergeSort(mergeFiles(parser.getOptions().get(Parser.FILES_KEY),
+                mergerSort.switchType(parser)), mergerSort.switchSort(parser), mergerSort.switchType(parser))),
+                parser.getOptions().get(Parser.FILES_KEY).get(parser.getOptions().get(Parser.FILES_KEY).size() - 1));
     }
 }
