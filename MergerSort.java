@@ -18,13 +18,6 @@ class Descending implements Comparator<Comparable> {
 }
 
 public class MergerSort {
-/*    private static final String INTEGER_DATA_KEY = "-i";
-    private static final String STRING_DATA_KEY = "-s";
-    private static final String DESCENDING_SORT_KEY = "-d";
-    private static final String ASCENDING_SORT_KEY = "-a";*/
-
-
-
     private static <T> List<T> readFile(String filePath, Class<T> dataType) { //Чтение из файла в список
         List<T> myList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
@@ -130,37 +123,6 @@ public class MergerSort {
             System.out.println("Arguments entered incorrectly");
             return;
         }
-/*        mergerSort.switchType(parser);
-        mergerSort.switchSort(parser); */
-
-/*        Comparator sortTypeObject;
-        switch (sortType) {
-            case DESCENDING_SORT_KEY:
-                sortTypeObject = new Ascending();
-                break;
-            case ASCENDING_SORT_KEY:
-                sortTypeObject = new Descending();
-                break;
-            default:
-                sortTypeObject = new Ascending();
-                break;
-
-        }*/
-
-/*        String dataType = args[1];
-        Class dataTypeClass;
-        switch (dataType) {
-            case INTEGER_DATA_KEY:
-                dataTypeClass = Integer.class;
-                break;
-            case STRING_DATA_KEY:
-                dataTypeClass = String.class;
-                break;
-            default:
-                parser.getOptions();
-                System.out.println("Enter dataType");
-                return;
-        }*/
 
         writeFile((mergeSort(mergeFiles(parser.getOptions().get(Parser.FILES_KEY),
                 mergerSort.switchType(parser)), mergerSort.switchSort(parser), mergerSort.switchType(parser))),
